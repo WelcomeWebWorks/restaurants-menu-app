@@ -37,6 +37,15 @@ export default {
   },
 };
 </script>
+<style>
+/* Apply global styles for html and body */
+html, body {
+  height: 100%;
+  height: -webkit-fill-available;
+  margin: 0;
+  padding: 0;
+}
+</style>
 
 <style scoped>
 .custom-background {
