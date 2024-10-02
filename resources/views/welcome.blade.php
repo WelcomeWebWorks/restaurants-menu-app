@@ -12,6 +12,16 @@
 
         @vite(['resources/js/app.js','resources/css/app.css'])
 
+        <style>
+          html {
+            height: -webkit-fill-available;
+          }
+          body{
+            height: -webkit-fill-available;
+          }
+
+        </style>
+
     </head>
     <body>
         <div id="app">
