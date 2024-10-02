@@ -40,7 +40,6 @@ export default {
 <style>
 /* Apply global styles for html and body */
 html, body {
-  height: 100%;
   height: -webkit-fill-available;
   margin: 0;
   padding: 0;
@@ -50,15 +49,13 @@ html, body {
 <style scoped>
 .custom-background {
   /* Fullscreen setup */
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100vh;
-
-  /* Prevent scrolling */
+  height: 100%; /* Changed from 100vh to 100% to avoid issues with mobile browser UI */
   overflow: hidden;
-
+  
   /* Gradient background */
   background: linear-gradient(35deg, 
     rgba(0, 100, 0, 1) 0%,    
@@ -115,6 +112,9 @@ html, body {
   font-family: Arial, sans-serif;
   color: white;
   font-size: 0.6rem;
+  
+  /* Ensuring space for iPhone notches */
+  padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
 .footer-link {
@@ -166,6 +166,7 @@ html, body {
   .custom-footer {
     font-size: 0.8rem; /* Further reduce footer font size */
     padding: 0.4rem 0;
+    padding-bottom: env(safe-area-inset-bottom, 0.5rem);
   }
   .restaurant-name {
   font-size: 1.2rem;
