@@ -1,298 +1,165 @@
 <template>
-  <div class="menu-slider">
-    <!-- Display current menu item details if available -->
-    <div v-if="menuItems.length > 0" class="menu-item">
-      <div class="header">
-        <!-- Dynamic Client Logo -->
-        <div class="company_name">
-          <h3>{{ currentMenuItem.client_domain_name }}</h3>
-        </div>
-      </div>
-      <div class="header-row">
-        <span :class="['badge', currentMenuItem.menu_type === 1 ? 'veg-badge' : '']">
-          {{ currentMenuItem.menu_type === 1 ? 'VEG' : 'NON VEG' }}
-        </span>
-        <span class="price-tag">₹ {{ currentMenuItem.menu_price }}</span>
-      </div>
-      <!-- Item Name -->
-      <div class="item-name">{{ currentMenuItem.menu_name }}</div>
-      <!-- Ingredients -->
-      <div class="ingredients">
-        <strong>Ingredients:</strong>
-        <div v-html="currentMenuItem.menu_description"></div>
-      </div>
-      <!-- Image Container -->
-      <div class="img-container">
-        <img :src="getImageUrl(currentMenuItem.menu_image)" :alt="currentMenuItem.menu_name" id="item-image">
-      </div>
-      <!-- Add to Order Button -->
-      <div class="text-center">
-        <button class="order-btn" @click="addToOrder(currentMenuItem)">+ Add to Order</button>
-      </div>
+  <div class="custom-background">
+    <!-- Restaurant Name Box -->
+    <div class="restaurant-box" v-if="restaurant">
+      <img v-if="restaurant.logo" :src="restaurant.logo" alt="Restaurant Logo" class="restaurant-logo" />
+      <span class="restaurant-name">{{ restaurant.name }}</span>
     </div>
 
-    <!-- Navigation Buttons -->
-    <div class="nav-buttons">
-      <button @click="slideLeft" :disabled="currentIndex === 0">&#9664;</button>
-      <button @click="slideRight" :disabled="currentIndex === menuItems.length - 1">&#9654;</button>
-    </div>
-
-    <!-- Footer -->
-    <div class="copyright">
-      <p>
-        COPYRIGHT BY <span style="color: silver;">©</span>
-        <b><a href="#"><span style="color: rgb(146, 126, 14);">WELCOME WEB WORKS</span></a></b>
-      </p>
-    </div>
-
-    <!-- Loading state -->
-    <div v-if="loading">Loading menu items...</div>
-
-    <!-- Error state -->
-    <div v-if="error" class="error">{{ error }}</div>
+    <!-- Footer content -->
+    <footer class="custom-footer">
+      <span>&copy; 2024 <a href="https://welcomewebworks.com" class="footer-link">WELCOME WEB WORKS</a>. All rights reserved.</span>
+    </footer>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['domainName'], // Accept the domainName as a prop
+  name: 'CustomBackground',
   data() {
     return {
-      menuItems: [], // Holds the fetched menu data
-      currentIndex: 0, // Track the currently displayed item
-      loading: true, // Track loading state
-      error: null, // Track errors if any occur
-      touchStartX: 0, // To store the initial touch position
-      touchEndX: 0 // To store the final touch position
+      restaurant: null, // Will hold the restaurant data
     };
   },
-  computed: {
-    currentMenuItem() {
-      return this.menuItems[this.currentIndex];
-    }
+  mounted() {
+    this.fetchRestaurantData(); // Fetch the restaurant data when component is mounted
   },
   methods: {
-    async fetchMenuItems() {
-      try {
-        const response = await fetch(`/api/menu-items?domainName=${this.domainName}`); // Use the domainName in the API request
-        const data = await response.json();
-        this.menuItems = data;
-      } catch (error) {
-        this.error = 'Failed to load menu items.';
-      } finally {
-        this.loading = false;
-      }
+    fetchRestaurantData() {
+      // Simulate an API call to fetch restaurant data from the database
+      setTimeout(() => {
+        this.restaurant = {
+          name: 'LUCKEY Restaurant', // Dynamically fetched restaurant name
+          logo: 'https://static.vecteezy.com/system/resources/previews/025/270/679/original/kfc-logo-editorial-free-vector.jpg', // Dynamically fetched logo
+        };
+      }, 1000); // Simulating delay
     },
-    getImageUrl(imagePath) {
-      return `/storage/${imagePath}`;
-    },
-    slideRight() {
-      if (this.currentIndex < this.menuItems.length - 1) {
-        this.currentIndex++;
-      }
-    },
-    slideLeft() {
-      if (this.currentIndex > 0) {
-        this.currentIndex--;
-      }
-    },
-    addToOrder(menuItem) {
-      // Logic to add the selected menu item to an order
-      console.log('Adding to order:', menuItem);
-    },
-    handleTouchStart(event) {
-      event.preventDefault(); // Prevent default scroll behavior
-      this.touchStartX = event.changedTouches[0].screenX;
-    },
-    handleTouchEnd(event) {
-      this.touchEndX = event.changedTouches[0].screenX;
-      this.handleSwipe();
-    },
-    handleSwipe() {
-      if (this.touchEndX < this.touchStartX) {
-        this.slideRight();
-      } else if (this.touchEndX > this.touchStartX) {
-        this.slideLeft();
-      }
-    }
   },
-  mounted() {
-    // Fetch menu items when the component is mounted
-    this.fetchMenuItems();
-
-    // Add event listeners for touch gestures
-    const slider = document.querySelector('.menu-slider');
-    slider.addEventListener('touchstart', this.handleTouchStart, { passive: false }); // { passive: false } is important to prevent scrolling
-    slider.addEventListener('touchend', this.handleTouchEnd);
-  },
-  beforeDestroy() {
-    // Clean up event listeners to avoid memory leaks
-    const slider = document.querySelector('.menu-slider');
-    slider.removeEventListener('touchstart', this.handleTouchStart);
-    slider.removeEventListener('touchend', this.handleTouchEnd);
-  }
 };
 </script>
 
 <style scoped>
-/* Disable horizontal scrolling for the entire page */
-html, body {
-  overflow-x: hidden; /* Prevent horizontal scrolling on the body */
-}
+.custom-background {
+  /* Fullscreen setup */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
 
-.menu-slider {
-  text-align: center;
-  margin: 0 auto;
-  background-color: #000000;
-  color: rgb(255, 255, 255);
-  overflow: hidden; /* Ensure no content overflow in the slider */
-  position: relative; /* Important for positioning children like nav buttons */
-}
-
-.copyright {
-  background-color: #ffffff;
-  color: rgb(0, 0, 0);
-  text-align: center;
-  padding: 10px;
-  font-size: 0.8rem;
-  margin-top: auto;
-  padding-bottom: 0px;
-}
-
-.menu-item img {
-  width: 100%;
-  height: auto;
-}
-
-.navigation-buttons button {
-  margin: 10px;
-}
-
-.error {
-  color: red;
-}
-
-.header {
-  display: flex;
-  justify-content: left;
-  align-items: center;
-  padding: 10px;
-  padding-top: 25px;
-  width: 100%;
-  max-width: 300px;
-  height: 100px;
+  /* Prevent scrolling */
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+
+  /* Gradient background */
+  background: linear-gradient(35deg, 
+    rgba(0, 100, 0, 1) 0%,    
+    rgba(0, 100, 0, 1) 10%,   
+    rgba(0, 0, 0, 1) 50%,     
+    rgba(0, 100, 0, 1) 100%);
+  background-size: cover;
+  background-position: center;
 }
 
-.company_name h3 {
-  font-size: 1.2rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 100%;
-}
-
-img {
-  max-width: 100%;
-  max-height: 100px;
-  object-fit: contain;
-  overflow: hidden;
-}
-
-.header-row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  position: relative;
-}
-
-.badge {
-  font-size: 0.9rem;
-  font-weight: bold;
-  background-color: #eab5b5;
-  color: rgb(134, 0, 0);
-  padding: 5px 10px;
-  border-radius: 20px;
-}
-
-.veg-badge {
-  background-color: #99eda4;
-  color: #006f0f;
-}
-
-.price-tag {
-  font-size: 1.5rem;
-  font-weight: bold;
+/* Restaurant Name Box Styling */
+.restaurant-box {
   position: absolute;
-  right: 20px;
+  top: 15px; /* Position in the top left corner */
+  left: 12px;
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
+  
+  /* Set circular cut edges on the corners */
+  border-radius: 50px 150px 50px 150px; /* Circular cut edges */
+  
+  background: none; /* No background for the box */
 }
 
-.item-name {
-  text-align: center;
-  margin: 10px 0;
-  width: 100%;
-  font-size: clamp(1rem, 5vw, 1.8rem);
+/* Restaurant Logo Styling */
+.restaurant-logo {
+  width: 60px;
+  height: 60px;
+  margin-right: 10px;
+  object-fit: cover;
+  border-radius: 50%; /* Circular logo */
+  border: 2px solid green; /* Simple green border */
+}
+
+/* Restaurant Name Styling */
+.restaurant-name {
+  color: #FFD700; /* Gold color for restaurant name */
+  font-size: 1.4rem;
+  font-weight: bold;
   white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.ingredients {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
+/* Footer styling */
+.custom-footer {
+  position: absolute;
+  bottom: 0;
   width: 100%;
-  height: 150px;
-  overflow: hidden;
-  text-align: justify;
-}
-
-.ingredients div {
-  font-size: 14px;
-  line-height: 1.5;
-  overflow: hidden;
-}
-
-.img-container {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-}
-
-.img-container img {
-  width: 200px;
-  height: 200px;
-  border-radius: 25px;
-  z-index: 2;
-  transition: transform 0.5s;
-}
-
-.order-btn {
-  background-color: #FF5656;
+  text-align: center;
+  padding: 0.2rem 0;
+  background-color: black;
+  font-family: Arial, sans-serif;
   color: white;
-  border-radius: 25px;
-  padding: 10px 20px;
-  font-size: 1rem;
+  font-size: 0.6rem;
+}
+
+.footer-link {
+  background: linear-gradient(35deg, 
+    rgb(255, 215, 0) 0%,   /* Gold color */
+    rgb(218, 165, 32) 50%, /* Deep gold color */
+    rgb(255, 223, 0) 100%  /* Lighter gold color */
+  ); 
+  background-clip: text;
+  -webkit-background-clip: text; /* For Safari compatibility */
+  color: transparent; /* Hide the original text color */
+  text-decoration: none;
   font-weight: bold;
-  text-transform: uppercase;
-  margin: 20px 0;
 }
 
-.nav-buttons {
-  display: flex;
-  justify-content: space-between;
-  margin: 10px 20px;
+.footer-link:hover {
+  text-decoration: underline;
 }
 
-.nav-buttons button {
-  background-color: transparent;
-  border: none;
-  font-size: 2rem;
-  color: rgb(255, 0, 0);
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .restaurant-box {
+    font-size: 1rem; /* Smaller font size */
+    padding: 4px 8px; /* Adjust padding */
+  }
+
+  .restaurant-logo {
+    width: 30px;
+    height: 30px; /* Smaller logo */
+  }
+
+  .custom-footer {
+    font-size: 0.9rem; /* Adjust font size for footer */
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .restaurant-box {
+    font-size: 0.5rem;
+    padding: 2px 4px; /* Even smaller padding */
+  }
+
+  .restaurant-logo {
+    width: 45px;
+    height: 45px; /* Smaller logo */
+  }
+
+  .custom-footer {
+    font-size: 0.8rem; /* Further reduce footer font size */
+    padding: 0.4rem 0;
+  }
+  .restaurant-name {
+  font-size: 1.2rem;
+}
 }
 </style>
