@@ -29,7 +29,7 @@ export default {
       // Simulate an API call to fetch restaurant data from the database
       setTimeout(() => {
         this.restaurant = {
-          name: 'LUCKEY Restaurant', // Dynamically fetched restaurant name
+          name: 'LUCKEY Restaurants', // Dynamically fetched restaurant name
           logo: 'https://static.vecteezy.com/system/resources/previews/025/270/679/original/kfc-logo-editorial-free-vector.jpg', // Dynamically fetched logo
         };
       }, 1000); // Simulating delay
