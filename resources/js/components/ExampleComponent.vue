@@ -254,7 +254,7 @@ html, body {
   font-weight: bold;
   background-color: #eab5b5;
   color: rgb(134, 0, 0);
-  font-family: 'Flavors', cursive;
+  font-family: 'Flavors';
   padding: 1px 10px;
   border-radius: 20px;
 }
@@ -262,13 +262,13 @@ html, body {
 .veg-badge {
   background-color: #99eda4;
   color: #006f0f;
-  font-family: 'Flavors', cursive;
+  font-family: 'Flavors';
 }
 
 .price-tag {
   font-size: 1.5rem;
   font-weight: bold;
-  font-family: 'Flavors', cursive;
+  font-family: 'Flavors';
   
 }
 
