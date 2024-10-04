@@ -3,44 +3,42 @@
     <div v-if="menuItems.length > 0">
   <div class="custom-background">
     <!-- Restaurant Name Box -->
-    <div class="restaurant-box" v-if="restaurant">
-      <img v-if="restaurant.logo" :src="restaurant.logo" alt="Restaurant Logo" class="restaurant-logo" />
-      <span class="restaurant-name">{{ restaurant.name }}</span>
+    <div class="restaurant-box">
+      <!-- <img v-if="restaurant.logo" :src="restaurant.logo" alt="Restaurant Logo" class="restaurant-logo" /> -->
+      <span class="restaurant-name">{{ currentMenuItem.client_domain_name }} Restaurent</span>
     </div>
 
     <!-- Transparent Navbar -->
     <nav class="custom-navbar">
       <ul class="nav-menu">
-        <li class="menu-button" @click="toggleSidebar">
-          <svg xmlns="http://www.w3.org/2000/svg" height="30" viewBox="0 96 960 960" width="30">
-            <path d="M120 816v-60h720v60H120Zm0-210v-60h720v60H120Zm0-210v-60h720v60H120Z" />
-          </svg>
-        </li>
         <li class="center-text"><span :class="['badge', currentMenuItem.menu_type === 1 ? 'veg-badge' : '']">
           {{ currentMenuItem.menu_type === 1 ? 'VEG' : 'NON-VEG' }}
         </span></li>
         <li><span class="price-tag">₹ {{ currentMenuItem.menu_price }}</span></li>
       </ul>
     </nav>
-    <!-- Sliding Sidebar -->
-    <ul class="sidebar" v-show="isSidebarVisible">
-      <li @click="toggleSidebar">
-        <a href="#">
-          <svg xmlns="http://www.w3.org/2000/svg" height="26" viewBox="0 96 960 960" width="26">
-            <path d="m249 849-42-42 231-231-231-231 42-42 231 231 231-231 42 42-231 231 231 231-42 42-231-231-231 231Z" />
-          </svg>
-        </a>
-      </li>
-      <li><a href="#">Blog</a></li>
-      <li><a href="#">Products</a></li>
-      <li><a href="#">About</a></li>
-      <li><a href="#">Forum</a></li>
-      <li><a href="#">Login</a></li>
-    </ul>
+
+    <div class="item-name-wrapper">
+      <h1 class="item-name">{{ currentMenuItem.menu_name }}</h1>
+    </div>
+
+    <div class="ingredients-wrapper">
+      <div class="ingredients">
+        <strong>Ingredients:</strong>
+        <div v-html="currentMenuItem.menu_description"></div>
+      </div>
+    </div>
+
+    <!-- Image Container -->
+    <div class="img-container-wrapper">
+      <div class="img-container">
+        <img :src="getImageUrl(currentMenuItem.menu_image)" :alt="currentMenuItem.menu_name" id="item-image">
+      </div>
+    </div>
 
     <!-- Footer content -->
     <footer class="custom-footer">
-      <span>&copy; 2024 <a href="https://welcomewebworks.com" class="footer-link">WELCOME WEB WORKS</a>. All rights reserved.</span>
+      <span>&copy; 2024 <a href="https://welcomewebworks.com" class="footer-link"> WELCOME WEB WORKS</a>. All rights reserved.</span>
     </footer>
   </div>
 </div>
@@ -53,8 +51,6 @@ export default {
   props: ['domainName'],
   data() {
     return {
-      restaurant: null, // Will hold the restaurant data
-      isSidebarVisible: false, // Control visibility of sidebar
       menuItems: [], // Holds the fetched menu data
       currentIndex: 0, // Track the currently displayed item
       loading: true, // Track loading state
@@ -68,9 +64,7 @@ export default {
       return this.menuItems[this.currentIndex];
     }
   },
-  mounted() {
-    this.fetchRestaurantData(); // Fetch the restaurant data when component is mounted
-    // Fetch menu items when the component is mounted
+  mounted() { // Fetch the restaurant data when component is mounted
     this.fetchMenuItems();
 
     // Add event listeners for touch gestures
@@ -78,33 +72,7 @@ export default {
     slider.addEventListener('touchstart', this.handleTouchStart, { passive: false }); // { passive: false } is important to prevent scrolling
     slider.addEventListener('touchend', this.handleTouchEnd);
   },
-  beforeDestroy() {
-    // Clean up event listeners to avoid memory leaks
-    const slider = document.querySelector('.menu-slider');
-    slider.removeEventListener('touchstart', this.handleTouchStart);
-    slider.removeEventListener('touchend', this.handleTouchEnd);
-  },
   methods: {
-    fetchRestaurantData() {
-      // Simulate an API call to fetch restaurant data from the database
-      setTimeout(() => {
-        this.restaurant = {
-          name: 'LUCKEY Restaurants', // Dynamically fetched restaurant name
-          logo: 'https://static.vecteezy.com/system/resources/previews/025/270/679/original/kfc-logo-editorial-free-vector.jpg', // Dynamically fetched logo
-        };
-      }, 1000); // Simulating delay
-    },
-    toggleSidebar() {
-      this.isSidebarVisible = !this.isSidebarVisible; // Toggle sidebar visibility
-      console.log('Sidebar Visibility:', this.isSidebarVisible); // Debugging log
-      // Add or remove the "is-visible" class
-      const sidebar = document.querySelector('.sidebar');
-      if (this.isSidebarVisible) {
-        sidebar.classList.add('is-visible');
-      } else {
-        sidebar.classList.remove('is-visible');
-      }
-    },
 
     async fetchMenuItems() {
       try {
@@ -184,6 +152,9 @@ html, body {
   background-position: center;
 }
 
+
+
+
 /* Restaurant Name Box Styling */
 .restaurant-box {
   position: absolute;
@@ -222,6 +193,8 @@ html, body {
 
 
 
+
+
 /* Transparent Navbar */
 .custom-navbar {
   display: flex;
@@ -245,16 +218,12 @@ html, body {
   margin: 0;
 }
 
-.menu-button {
-  cursor: pointer;
-}
-
 .badge {
   font-size: 0.9rem;
   font-weight: bold;
   background-color: #eab5b5;
   color: rgb(134, 0, 0);
-  font-family: 'Flavors';
+  font-family: 'Flavors', cursive;
   padding: 1px 10px;
   border-radius: 20px;
 }
@@ -262,55 +231,85 @@ html, body {
 .veg-badge {
   background-color: #99eda4;
   color: #006f0f;
-  font-family: 'Flavors';
+  font-family: 'Flavors', cursive;
 }
 
 .price-tag {
   font-size: 1.5rem;
   font-weight: bold;
-  font-family: 'Flavors';
+  font-family: 'Flavors', cursive;
   
 }
 
-/* Sidebar styling */
-.sidebar {
-  position: fixed;
-  top: 57px;
+
+.item-name-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  top: 130px; /* Position below the restaurant box */
   left: 0;
   right: 0;
-  height: 100%; /* Add height */
-  background-color: rgb(0, 0, 0);
-  box-shadow: -10px 0 10px rgba(0, 0, 0, 0.1);
-  list-style: none;
+  padding: 0 20px;
+  z-index: 10;
+}
+
+.item-name {
+  text-align: center;
+  margin: 10px 0;
+  width: 100%;
+  font-size: clamp(1.5rem, 5vw, 1.8rem);
+  white-space: nowrap;
+  overflow: hidden;
+  font-family: 'Flavors';
+}
+
+.ingredients-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  top: 190px; /* Position below the restaurant box */
+  left: 0;
+  right: 0;
+  padding: 0 20px;
+  z-index: 10;
+}
+
+.ingredients {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: flex-start;
-  justify-content: flex-start;
-  padding: 20px;
-  transition: transform 0.3s ease-in-out; /* Added transform transition */
-  transform: translateX(-100%); /* Start hidden off-screen */
-  z-index: 9;
-}
-
-/* When sidebar is visible */
-.sidebar.is-visible {
-  transform: translateX(0); /* Slide-in animation */
-}
-
-
-.sidebar li {
   width: 100%;
-  margin: 10px 0;
+  height: 140px;
+  overflow: hidden;
+  text-align: justify;
 }
 
-.sidebar a {
-  width: 100%;
-  color: white;
-  text-decoration: none;
+.ingredients div {
+  font-size: 14px;
+  line-height: 1.5;
+  overflow: hidden;
 }
 
-.sidebar svg {
-  cursor: pointer;
+
+
+.img-container {
+  position: relative;
+  top: 330px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.img-container img {
+  width: 180px;
+  height: 180px;
+  border-radius: 100px;
+  z-index: 2;
+  transition: transform 0.5s;
 }
 
 
