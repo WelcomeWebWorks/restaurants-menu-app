@@ -1,48 +1,73 @@
 <template>
-  <div class="menu-slider">
+  <div
+    class="menu-slider"
+    @touchstart.prevent="handleTouchStart"
+    @touchend="handleTouchEnd"
+  >
     <div v-if="menuItems.length > 0">
-  <div class="custom-background">
-    <!-- Restaurant Name Box -->
-    <div class="restaurant-box">
-      <!-- <img v-if="restaurant.logo" :src="restaurant.logo" alt="Restaurant Logo" class="restaurant-logo" /> -->
-      <span class="restaurant-name">{{ currentMenuItem.client_domain_name }} Restaurent</span>
-    </div>
+      <div class="custom-background">
+        <!-- Restaurant Name Box -->
+        <div class="restaurant-box">
+          <!-- <img v-if="restaurant.logo" :src="restaurant.logo" alt="Restaurant Logo" class="restaurant-logo" /> -->
+          <span class="restaurant-name">
+            {{ currentMenuItem.client_domain_name }} Restaurant
+          </span>
+        </div>
 
-    <!-- Transparent Navbar -->
-    <nav class="custom-navbar">
-      <ul class="nav-menu">
-        <li class="center-text"><span :class="['badge', currentMenuItem.menu_type === 1 ? 'veg-badge' : '']">
-          {{ currentMenuItem.menu_type === 1 ? 'VEG' : 'NON-VEG' }}
-        </span></li>
-        <li><span class="price-tag">₹ {{ currentMenuItem.menu_price }}</span></li>
-      </ul>
-    </nav>
+        <!-- Transparent Navbar -->
+        <nav class="custom-navbar">
+          <ul class="nav-menu">
+            <li class="center-text">
+              <span
+                :class="[
+                  'badge',
+                  currentMenuItem.menu_type === 1 ? 'veg-badge' : '',
+                ]"
+              >
+                {{ currentMenuItem.menu_type === 1 ? 'VEG' : 'NON-VEG' }}
+              </span>
+            </li>
+            <li>
+              <span class="price-tag">₹ {{ currentMenuItem.menu_price }}</span>
+            </li>
+          </ul>
+        </nav>
 
-    <div class="item-name-wrapper">
-      <h1 class="item-name">{{ currentMenuItem.menu_name }}</h1>
-    </div>
+        <div class="item-name-wrapper">
+          <h1 class="item-name">{{ currentMenuItem.menu_name }}</h1>
+        </div>
 
-    <div class="ingredients-wrapper">
-      <div class="ingredients">
-        <strong>Ingredients:</strong>
-        <div v-html="currentMenuItem.menu_description"></div>
+        <div class="ingredients-wrapper">
+          <div class="ingredients">
+            <strong>Ingredients:</strong>
+            <div v-html="currentMenuItem.menu_description"></div>
+          </div>
+        </div>
+
+        <!-- Image Container -->
+        <div class="img-container">
+          <img
+            :src="getImageUrl(currentMenuItem.menu_image)"
+            :alt="currentMenuItem.menu_name"
+            id="item-image"
+          />
+        </div>
+        <!-- Footer content -->
+        <footer class="custom-footer">
+          <span
+            >&copy; 2024
+            <a href="https://welcomewebworks.com" class="footer-link"
+              >WELCOME WEB WORKS</a
+            >. All rights reserved.</span
+          >
+        </footer>
       </div>
     </div>
-
-    <!-- Image Container -->
-    <div class="img-container-wrapper">
-      <div class="img-container">
-        <img :src="getImageUrl(currentMenuItem.menu_image)" :alt="currentMenuItem.menu_name" id="item-image">
-      </div>
-    </div>
-
-    <!-- Footer content -->
-    <footer class="custom-footer">
-      <span>&copy; 2024 <a href="https://welcomewebworks.com" class="footer-link"> WELCOME WEB WORKS</a>. All rights reserved.</span>
-    </footer>
+    <!-- Loading Spinner -->
+    <div v-else-if="loading" class="loading-spinner">Loading...</div>
+    <!-- Error Message -->
+    <div v-else-if="error" class="error-message">{{ error }}</div>
   </div>
-</div>
-</div>
 </template>
 
 <script>
@@ -56,30 +81,36 @@ export default {
       loading: true, // Track loading state
       error: null, // Track errors if any occur
       touchStartX: 0, // To store the initial touch position
-      touchEndX: 0 // To store the final touch position
+      touchEndX: 0, // To store the final touch position
     };
   },
   computed: {
     currentMenuItem() {
-      return this.menuItems[this.currentIndex];
-    }
+      return this.menuItems[this.currentIndex] || {};
+    },
   },
-  mounted() { // Fetch the restaurant data when component is mounted
+  mounted() {
+    // Fetch the restaurant data when component is mounted
     this.fetchMenuItems();
-
-    // Add event listeners for touch gestures
-    const slider = document.querySelector('.menu-slider');
-    slider.addEventListener('touchstart', this.handleTouchStart, { passive: false }); // { passive: false } is important to prevent scrolling
-    slider.addEventListener('touchend', this.handleTouchEnd);
   },
   methods: {
-
     async fetchMenuItems() {
       try {
-        const response = await fetch(`/api/menu-items?domainName=${this.domainName}`); // Use the domainName in the API request
+        const response = await fetch(
+          `/api/menu-items?domainName=${this.domainName}`
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const data = await response.json();
-        this.menuItems = data;
+        if (Array.isArray(data) && data.length > 0) {
+          this.menuItems = data;
+          this.currentIndex = 0;
+        } else {
+          this.error = 'No menu items found.';
+        }
       } catch (error) {
+        console.error('Fetch error:', error);
         this.error = 'Failed to load menu items.';
       } finally {
         this.loading = false;
@@ -99,12 +130,7 @@ export default {
         this.currentIndex--;
       }
     },
-    addToOrder(menuItem) {
-      // Logic to add the selected menu item to an order
-      console.log('Adding to order:', menuItem);
-    },
     handleTouchStart(event) {
-      event.preventDefault(); // Prevent default scroll behavior
       this.touchStartX = event.changedTouches[0].screenX;
     },
     handleTouchEnd(event) {
@@ -112,18 +138,23 @@ export default {
       this.handleSwipe();
     },
     handleSwipe() {
-      if (this.touchEndX < this.touchStartX) {
+      const swipeThreshold = 30; // Minimum distance in pixels to be considered a swipe
+      if (this.touchEndX < this.touchStartX - swipeThreshold) {
+        // Swiped left
         this.slideRight();
-      } else if (this.touchEndX > this.touchStartX) {
+      } else if (this.touchEndX > this.touchStartX + swipeThreshold) {
+        // Swiped right
         this.slideLeft();
       }
-    }
+    },
   },
 };
 </script>
+
 <style>
 /* Apply global styles for html and body */
-html, body {
+html,
+body {
   height: -webkit-fill-available;
   margin: 0;
   padding: 0;
@@ -132,7 +163,13 @@ html, body {
 </style>
 
 <style scoped>
- /* Custom Background */
+/* Custom Background */
+.menu-slider {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
 .custom-background {
   /* Fullscreen setup */
   position: absolute;
@@ -141,19 +178,38 @@ html, body {
   width: 100vw;
   height: 100%; /* Changed from 100vh to 100% to avoid issues with mobile browser UI */
   overflow: hidden;
-  
+
   /* Gradient background */
-  background: linear-gradient(35deg, 
-    rgba(0, 100, 0, 1) 0%,    
-    rgba(0, 100, 0, 1) 10%,   
-    rgb(0, 0, 0) 50%,     
-    rgba(0, 100, 0, 1) 100%);
+  background: linear-gradient(
+    35deg,
+    rgba(0, 100, 0, 1) 0%,
+    rgba(0, 100, 0, 1) 10%,
+    rgb(0, 0, 0) 50%,
+    rgba(0, 100, 0, 1) 100%
+  );
   background-size: cover;
   background-position: center;
 }
 
+/* Loading Spinner */
+.loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  color: white;
+}
 
-
+/* Error Message */
+.error-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
+  color: red;
+}
 
 /* Restaurant Name Box Styling */
 .restaurant-box {
@@ -163,10 +219,10 @@ html, body {
   display: flex;
   align-items: center;
   padding: 6px 12px;
-  
+
   /* Set circular cut edges on the corners */
   border-radius: 50px 150px 50px 150px; /* Circular cut edges */
-  
+
   background: none; /* No background for the box */
 }
 
@@ -188,12 +244,8 @@ html, body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-family: 'Roboto', sans-serif;;
+  font-family: 'Roboto', sans-serif;
 }
-
-
-
-
 
 /* Transparent Navbar */
 .custom-navbar {
@@ -238,9 +290,7 @@ html, body {
   font-size: 1.5rem;
   font-weight: bold;
   font-family: 'Flavors', cursive;
-  
 }
-
 
 .item-name-wrapper {
   display: flex;
@@ -293,8 +343,6 @@ html, body {
   overflow: hidden;
 }
 
-
-
 .img-container {
   position: relative;
   top: 330px;
@@ -312,7 +360,6 @@ html, body {
   transition: transform 0.5s;
 }
 
-
 /* Footer styling */
 .custom-footer {
   position: absolute;
@@ -324,17 +371,21 @@ html, body {
   font-family: Arial, sans-serif;
   color: white;
   font-size: 0.6rem;
-  
+
   /* Ensuring space for iPhone notches */
   padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
 .footer-link {
-  background: linear-gradient(35deg, 
-    rgb(255, 215, 0) 0%,   /* Gold color */
-    rgb(218, 165, 32) 50%, /* Deep gold color */
-    rgb(255, 223, 0) 100%  /* Lighter gold color */
-  ); 
+  background: linear-gradient(
+    35deg,
+    rgb(255, 215, 0) 0%,
+    /* Gold color */
+    rgb(218, 165, 32) 50%,
+    /* Deep gold color */
+    rgb(255, 223, 0) 100%
+    /* Lighter gold color */
+  );
   background-clip: text;
   -webkit-background-clip: text; /* For Safari compatibility */
   color: transparent; /* Hide the original text color */
@@ -345,7 +396,6 @@ html, body {
 .footer-link:hover {
   text-decoration: underline;
 }
-
 
 /* Responsive Design */
 @media screen and (max-width: 768px) {
@@ -376,11 +426,11 @@ html, body {
   }
 
   .restaurant-name {
-   font-size: 1.2rem;
+    font-size: 1.2rem;
   }
 
   .custom-navbar {
-    top: 85px; /*Navigation Bar Position below the restaurant box */
+    top: 85px; /* Navigation Bar Position below the restaurant box */
     padding: 0 25px;
   }
 
@@ -389,6 +439,5 @@ html, body {
     padding: 0.4rem 0;
     padding-bottom: env(safe-area-inset-bottom, 0.5rem);
   }
-
 }
 </style>

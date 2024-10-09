@@ -11,11 +11,12 @@
     <link href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+
         :root {
             --header-height: 3rem;
             --nav-width: 68px;
-            --nav-extended-width: 200px; /* Width for extended nav */
-            --first-color: #08060f;
+            --first-color: #239fd9;
             --first-color-light: #AFA5D9;
             --white-color: #F7F6FB;
             --body-font: 'Nunito', sans-serif;
@@ -36,10 +37,6 @@
             transition: .5s;
         }
 
-        a {
-            text-decoration: none;
-        }
-
         .header {
             width: 100%;
             height: var(--header-height);
@@ -50,7 +47,6 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 1rem;
-            background-color: var(--white-color);
             z-index: var(--z-fixed);
             transition: .5s;
         }
@@ -77,7 +73,7 @@
         .l-navbar {
             position: fixed;
             top: 0;
-            left: -30%; /* Initially hidden */
+            left: -30%;
             width: var(--nav-width);
             height: 100vh;
             background-color: var(--first-color);
@@ -130,6 +126,21 @@
         .nav_icon {
             font-size: 1.25rem;
         }
+                /* Ensure that all links have no underline */
+        .nav a {
+            text-decoration: none !important;  /* Forcefully removes the underline */
+            color: inherit; /* Inherit the color so that links are not changed */
+        }
+
+        .nav_link:hover, .nav_link.active {
+            text-decoration: none !important;  /* No underline on hover or active state */
+        }
+
+        /* Forcing the style of anchor links inside the navigation */
+        a.nav_link {
+            text-decoration: none !important;
+        }
+
 
         .show {
             left: 0;
@@ -159,12 +170,12 @@
         @media screen and (min-width: 768px) {
             body {
                 margin: calc(var(--header-height) + 1rem) 0 0 0;
-                padding-left: calc(var(--nav-extended-width) + 2rem);
+                padding-left: calc(var(--nav-width) + 2rem);
             }
 
             .header {
                 height: calc(var(--header-height) + 1rem);
-                padding: 0 2rem 0 calc(var(--nav-extended-width) + 2rem);
+                padding: 0 2rem 0 calc(var(--nav-width) + 2rem);
             }
 
             .header_img {
@@ -178,16 +189,26 @@
 
             .l-navbar {
                 left: 0;
-                width: var(--nav-extended-width);
                 padding: 1rem 1rem 0 0;
             }
 
             .show {
-                width: calc(var(--nav-extended-width) + 156px);
+                width: calc(var(--nav-width) + 156px);
             }
 
             .body-pd {
-                padding-left: calc(var(--nav-extended-width) + 1rem);
+                padding-left: calc(var(--nav-width) + 188px);
+            }
+            .name_mview {
+                display: none;
+            }
+
+        }
+
+        @media screen and (max-width: 767px) {
+            .name_mview {
+                font-size: 8px;
+                color: white;    
             }
         }
     </style>
@@ -205,34 +226,47 @@
         <nav class="nav">
             <div>
                 <a href="#" class="nav_logo">
-                    <i class='bx bx-layer nav_logo-icon'></i>
-                    <span class="nav_logo-name">Dashboard</span>
+                    <span class="nav_logo-name">Welcome Web Works</span>
                 </a>
                 <div class="nav_list">
-                    <a href="{{ route('clientDetails') }}" class="nav_link active">
+                    <a href="#" class="nav_link active">
                         <i class='bx bx-grid-alt nav_icon'></i>
-                        <span class="nav_name">Client Details</span>
+                        {{-- <span class="name_mview">1sdfwef<span> --}}
+                        <span class="nav_name">Dashboard</span>
                     </a>
-                    <a href="{{ route('addClient') }}" class="nav_link">
+                    <a href="{{ route('clientDetails') }}" class="nav_link">
                         <i class='bx bx-user nav_icon'></i>
-                        <span class="nav_name">Users</span>
-                    </a>
+                        <span class="nav_name">Client Details</span>
+                    </a>                    
                     <a href="{{ route('menuDetails') }}" class="nav_link">
                         <i class='bx bx-message-square-detail nav_icon'></i>
-                        <span class="nav_name">Messages</span>
+                        <span class="nav_name">Menu Details</span>
+                    </a>
+                    <a href="{{ route('menuPriceDetails') }}" class="nav_link">
+                        <i class='bx bx-bookmark nav_icon'></i>
+                        <span class="nav_name">Menu Price Details</span>
+                    </a>
+                    <a href="{{ route('addClient') }}" class="nav_link">
+                        <i class='bx bx-folder nav_icon'></i>
+                        <span class="nav_name">Add Client</span>
+                    </a>
+                    <a href="{{ route('addMenu') }}" class="nav_link">
+                        <i class='bx bx-bar-chart-alt-2 nav_icon'></i>
+                        <span class="nav_name">Add Menu</span>
                     </a>
                     <a href="{{ route('addClientMenuPrice') }}" class="nav_link">
-                        <i class='bx bx-bookmark nav_icon'></i>
-                        <span class="nav_name">Bookmark</span>
+                        <i class='bx bx-bar-chart-alt-2 nav_icon'></i>
+                        <span class="nav_name">Add Client MenuPrice</span>
                     </a>
                 </div>
             </div>
-            <a href="#" class="nav_link">
+            <a href="logout" class="nav_link">
                 <i class='bx bx-log-out nav_icon'></i>
                 <span class="nav_name">SignOut</span>
             </a>
         </nav>
     </div>
+
     <!-- Main Container Start -->
     <div class="height-100 bg-light">
         @yield('content')
@@ -259,7 +293,7 @@
                         headerpd.classList.toggle('body-pd');
                     });
                 }
-            }
+            };
 
             showNavbar('header-toggle', 'nav-bar', 'body-pd', 'header');
 
@@ -271,6 +305,7 @@
                     this.classList.add('active');
                 }
             }
+
             linkColor.forEach(l => l.addEventListener('click', colorLink));
         });
     </script>
