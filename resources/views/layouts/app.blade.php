@@ -2,13 +2,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Required meta tags -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title')</title>
+
     <!-- Bootstrap 5 CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
     <!-- Boxicons CSS for icons -->
     <link href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" rel="stylesheet">
+
     <!-- Custom CSS -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
@@ -35,6 +39,7 @@
             font-family: var(--body-font);
             font-size: var(--normal-font-size);
             transition: .5s;
+            background-color: #ecf0f3;
         }
 
         .header {
@@ -49,6 +54,7 @@
             padding: 0 1rem;
             z-index: var(--z-fixed);
             transition: .5s;
+            background-color: #ecf0f3;
         }
 
         .header_toggle {
@@ -126,21 +132,21 @@
         .nav_icon {
             font-size: 1.25rem;
         }
-                /* Ensure that all links have no underline */
+
+        /* Ensure that all links have no underline */
         .nav a {
-            text-decoration: none !important;  /* Forcefully removes the underline */
-            color: inherit; /* Inherit the color so that links are not changed */
+            text-decoration: none !important;
+            color: inherit;
         }
 
         .nav_link:hover, .nav_link.active {
-            text-decoration: none !important;  /* No underline on hover or active state */
+            text-decoration: none !important;
         }
 
         /* Forcing the style of anchor links inside the navigation */
         a.nav_link {
             text-decoration: none !important;
         }
-
 
         .show {
             left: 0;
@@ -164,7 +170,8 @@
         }
 
         .height-100 {
-            height: 100vh;
+            min-height: 100vh;
+            padding-top: calc(var(--header-height) + 1rem);
         }
 
         @media screen and (min-width: 768px) {
@@ -199,6 +206,7 @@
             .body-pd {
                 padding-left: calc(var(--nav-width) + 188px);
             }
+
             .name_mview {
                 display: none;
             }
@@ -212,8 +220,12 @@
             }
         }
     </style>
+
+    <!-- Yield additional CSS -->
+    @yield('head')
 </head>
 <body id="body-pd">
+    <!-- Header and Navbar -->
     <header class="header" id="header">
         <div class="header_toggle">
             <i class='bx bx-menu' id="header-toggle"></i>
@@ -231,7 +243,6 @@
                 <div class="nav_list">
                     <a href="#" class="nav_link active">
                         <i class='bx bx-grid-alt nav_icon'></i>
-                        {{-- <span class="name_mview">1sdfwef<span> --}}
                         <span class="nav_name">Dashboard</span>
                     </a>
                     <a href="{{ route('clientDetails') }}" class="nav_link">
@@ -274,8 +285,15 @@
     <!-- Main Container End -->
 
     <!-- JS Libraries -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- jQuery (needed before Bootstrap JS and DataTables JS) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Yield additional JS scripts -->
+    @yield('scripts')
+
     <!-- Custom JS -->
     <script>
         document.addEventListener("DOMContentLoaded", function(event) {

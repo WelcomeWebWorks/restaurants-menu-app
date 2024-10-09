@@ -1,19 +1,13 @@
 @extends('layouts.app')
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Client Details - Welcome Web Works</title>
-    @section('title', 'Client Details')
-    @section('content')
+@section('title', 'Client Details')
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap5.min.css">
+@section('head')
+    <!-- Additional CSS Libraries -->
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <!-- DataTables Responsive CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -21,42 +15,7 @@
     <!-- Google Font: Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;900&display=swap" rel="stylesheet">
 
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- DataTables JS and Responsive Extension -->
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap5.min.js"></script>
-
-    <!-- Initialize DataTable with Responsive Feature and Column Priority -->
-    <script>
-        $(document).ready(function() {
-            $('#clientTable').DataTable({
-                "paging": true,
-                "lengthChange": false,
-                "searching": true,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true, // Enable responsive mode
-                "columns": [ // Set priority for each column
-                    { "data": "id", "responsivePriority": 1 }, // Always show on mobile
-                    { "data": "client_name", "responsivePriority": 2 }, // Always show on mobile
-                    { "data": "client_domain_name", "responsivePriority": 3 }, // Always show on mobile
-                    { "data": "client_contact1", "responsivePriority": 4 },
-                    { "data": "client_contact2", "responsivePriority": 5 },
-                    { "data": "client_email", "responsivePriority": 6 },
-                    { "data": "client_location", "responsivePriority": 7 },
-                    { "data": "client_status", "responsivePriority": 8 },
-                    { "data": "created_at", "responsivePriority": 9 },
-                    { "data": "action", "responsivePriority": 10 } // Action buttons
-                ]
-            });
-        });
-    </script>
-
+    <!-- Custom Styles -->
     <style>
         input {
             caret-color: red;
@@ -78,6 +37,7 @@
             border-radius: 20px;
             box-shadow: 14px 14px 20px #cbced1, -14px -14px 20px white;
             text-align: center;
+            width: 100%;
         }
 
         .brand-logo {
@@ -143,9 +103,56 @@
         button:hover {
             box-shadow: none;
         }
+
+        /* Adjust table styles */
+        .table-responsive {
+            margin-top: 30px;
+        }
+
+        table.dataTable.no-footer {
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            padding: 0;
+            margin-left: 0;
+            display: inline;
+            border: none;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            border: none;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+            background: none;
+            color: #008CBA;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+            background: none;
+        }
+
+        .dataTables_wrapper .dataTables_filter input {
+            margin-left: 0.5em;
+            display: inline-block;
+            width: auto;
+            background: #ecf0f3;
+            border-radius: 20px;
+            padding: 5px 10px;
+            border: 1px solid #cbced1;
+        }
+
+        .dataTables_wrapper .dataTables_length select {
+            background: #ecf0f3;
+            border-radius: 20px;
+            padding: 5px 10px;
+            border: 1px solid #cbced1;
+        }
     </style>
-</head>
-<body>
+@endsection
+
+@section('content')
     <div class="container">
         <div class="brand-logo"></div>
         <div class="brand-title">Welcome Web Works</div>
@@ -192,15 +199,14 @@
         </div>
     </div>
 
-    <!-- Bootstrap JS and Popper.js -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
     <!-- Edit Client Modal -->
     <div class="modal fade" id="editClientModal" tabindex="-1" aria-labelledby="editClientModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
+                    <!-- Modal Title -->
                     <h5 class="modal-title" id="editClientModalLabel">Edit Client</h5>
+                    <!-- Close Button -->
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -221,7 +227,7 @@
                         <!-- Client Domain Name -->
                         <div class="mb-3">
                             <label for="edit_client_domain_name" class="form-label">Client Domain Name <span style="color: red;">*</span></label>
-                                <input type="text" id="edit_client_domain_name" name="edit_client_domain_name" class="form-control" required>
+                            <input type="text" id="edit_client_domain_name" name="client_domain_name" class="form-control" required>
                         </div>                        
 
                         <!-- Client Contact 1 -->
@@ -264,7 +270,33 @@
             </div>
         </div>
     </div>
-
-</body>
 @endsection
-</html>
+
+@section('scripts')
+    <!-- Additional JS Libraries -->
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <!-- DataTables Bootstrap JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <!-- DataTables Responsive JS -->
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <!-- DataTables Responsive Bootstrap JS -->
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+
+    <!-- Initialize DataTable -->
+    <script>
+        $(document).ready(function() {
+            $('#clientTable').DataTable({
+                responsive: true,
+                paging: true,
+                lengthChange: false,
+                searching: true,
+                ordering: true,
+                info: true,
+                autoWidth: false,
+                // Ensure that the columns option is removed if not using AJAX data source
+                // columns: [ ... ]
+            });
+        });
+    </script>
+@endsection

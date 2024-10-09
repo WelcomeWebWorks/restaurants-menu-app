@@ -1,59 +1,18 @@
 @extends('layouts.app')
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Add New Menu - Welcome Web Works</title>
-    @section('title', 'Add Menu')
-    @section('content')
+
+@section('title', 'Add New Menu - Welcome Web Works')
+
+@section('head')
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Google Font: Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;900&display=swap" rel="stylesheet">
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Summernote CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
 
-    <!-- Include Summernote CSS and JS -->
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
-<script>
-
-        $(document).ready(function() {
-                $('#menu_description').summernote({
-                    height: 200, // Set the height of the editor
-                    toolbar: [
-                        ['style', ['bold', 'italic', 'underline', 'clear']],
-                        ['para', ['ul', 'ol', 'paragraph']],
-                        ['view', ['codeview', 'undo', 'redo']]
-                    ]
-                });
-            });
-
-       $(document).ready(function() {
-        // When the user selects an image
-        $('#menu_image').on('change', function() {
-            var input = this;
-
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                
-                // Display the preview once the image is loaded
-                reader.onload = function(e) {
-                    $('#image_preview').attr('src', e.target.result);
-                    $('#image_preview_container').show(); // Show the preview container
-                }
-
-                reader.readAsDataURL(input.files[0]); // Read the selected file as a data URL
-            } else {
-                $('#image_preview_container').hide(); // Hide the preview if no image is selected
-            }
-        });
-    });
-    </script>
-
+    <!-- Custom Styles -->
     <style>
         input {
             caret-color: red;
@@ -109,7 +68,7 @@
             margin-top: 30px;
         }
 
-        input, button {
+        input, button, textarea, select {
             display: block;
             width: 100%;
             border: none;
@@ -117,13 +76,18 @@
             box-sizing: border-box;
         }
 
-        input {
+        input, textarea, select {
             background: #ecf0f3;
             padding: 10px;
-            height: 50px;
             font-size: 14px;
             border-radius: 50px;
             box-shadow: inset 6px 6px 6px #cbced1, inset -6px -6px 6px white;
+            margin-bottom: 10px;
+        }
+
+        textarea {
+            border-radius: 20px;
+            resize: none;
         }
 
         button {
@@ -141,9 +105,14 @@
         button:hover {
             box-shadow: none;
         }
+
+        .alert {
+            margin-top: 20px;
+        }
     </style>
-</head>
-<body>
+@endsection
+
+@section('content')
     <div class="container">
         <div class="brand-logo"></div>
         <div class="brand-title">Welcome Web Works</div>
@@ -163,7 +132,7 @@
             <!-- Menu Name -->
             <div class="mb-3">
                 <label for="menu_name" class="form-label">Menu Name <span style="color: red;">*</span></label>
-                <textarea id="menu_name" name="menu_name" class="form-control" placeholder="Enter menu name" required style="height: 80px;"></textarea> <!-- Textarea with increased height -->
+                <textarea id="menu_name" name="menu_name" class="form-control" placeholder="Enter menu name" required style="height: 80px;"></textarea>
             </div>
 
             <!-- Menu Image Upload -->
@@ -196,22 +165,61 @@
                 </select>
             </div>
 
-           <!-- Menu Category -->
+            <!-- Menu Category -->
             <div class="mb-3">
                 <label for="menu_category" class="form-label">Menu Category <span style="color: red;">*</span></label>
                 <input type="text" id="menu_category" name="menu_category" class="form-control" placeholder="Enter menu category" required>
             </div>
 
-
             <!-- Note to re-verify client details -->
             <p style="color: red;">NOTE: <span style="color: #000000">Please re-verify Menu details before adding the Menu.</span></p>
+
             <!-- Submit Button -->
             <button type="submit" class="btn btn-primary addClientSubmit">Add Menu</button>
         </form>
     </div>
+@endsection
+
+@section('scripts')
+    <!-- jQuery (if not already included in your layout) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- Bootstrap JS and Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+
+    <!-- Summernote JS -->
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+
+    <!-- Custom Scripts -->
+    <script>
+        $(document).ready(function() {
+            $('#menu_description').summernote({
+                height: 200, // Set the height of the editor
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['view', ['codeview', 'undo', 'redo']]
+                ]
+            });
+
+            // When the user selects an image
+            $('#menu_image').on('change', function() {
+                var input = this;
+
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    
+                    // Display the preview once the image is loaded
+                    reader.onload = function(e) {
+                        $('#image_preview').attr('src', e.target.result);
+                        $('#image_preview_container').show(); // Show the preview container
+                    }
+
+                    reader.readAsDataURL(input.files[0]); // Read the selected file as a data URL
+                } else {
+                    $('#image_preview_container').hide(); // Hide the preview if no image is selected
+                }
+            });
+        });
+    </script>
 @endsection
-</html>
