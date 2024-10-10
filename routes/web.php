@@ -13,7 +13,10 @@ Route::get('/', function () {
 })->name('index');
 
 // Product Routing
-Route::get('/{domainName}/menu', [ProductController::class, 'checkDomainName'])->name('domainName');
+Route::domain('{subdomain}.welcomewebworks.com')->group(function () {
+    Route::get('/menu', [ProductController::class, 'checkSubdomain'])->name('subdomain.menu');
+});
+
 Route::get('/api/menu-items', [ProductController::class, 'getMenuItems']);
 
 // Login Route

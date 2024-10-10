@@ -9,16 +9,14 @@ use App\Models\ClientMenuPrice;
 
 class ProductController extends Controller
 {
-    public function checkDomainName(Request $request, $domainName)
-    {
-        $exists = Clients::where('client_domain_name', $domainName)->exists();
-        
-        if ($exists) {
-            return view('welcome', ['domainName' => $domainName]);
+    public function checkSubdomain($subdomain) {
+        $client = Clients::where('client_domain_name', $subdomain)->first();
+        if ($client) {
+            return view('welcome', ['domainName' => $subdomain]);
         }
-
         return view('404');
     }
+    
 
 
     public function getMenuItems(Request $request) {
