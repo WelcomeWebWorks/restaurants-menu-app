@@ -170,76 +170,73 @@
 
         <div class="form-title">Add New Student Form</div>
         <!-- Note to re-verify student details -->
-        <p style="color: red;">NOTE 1: <span class="join_note" style="color: #000000">Only for TELUGU STUDENTS.<br>Currently, we are only accepting students who speak Telugu.</span></p>
-        <p style="color: red;">NOTE 2: <span class="join_note" style="color: #000000" >This is serious training for students who genuinely seek jobs and come from financially disadvantaged backgrounds. If you're planning to go abroad or are involved in a family business, please reconsider and allow others to take this opportunity. We are only accepting <b>30</b> dedicated students.</span></p>
+        <p style="color: red;">NOTE 1: <span class="join_note" style="color: #000000">Only for <b>TELUGU STUDENTS</b>.<br>Currently, we are only accepting students who speak Telugu.</span></p>
+        <p style="color: red;">NOTE 2: <span class="join_note" style="color: #000000">This is serious training for students who genuinely seek jobs and come from financially disadvantaged backgrounds. If you're planning to go abroad or are involved in a family business, please reconsider and allow others to take this opportunity. We are only accepting <b>30</b> dedicated students.</span></p>
 
         <!-- Success Message -->
         @if (session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
             </div>
+        @else
+            <form class="inputs" action="{{ route('addStudent') }}" method="POST">
+                @csrf
+
+                <!-- Student College Name -->
+                <label for="student_college_name">Student College Name <span style="color: red;">*</span></label>
+                <input type="text" id="student_college_name" name="student_college_name" placeholder="Enter college name" required>
+
+                <!-- Student Name -->
+                <label for="student_name">Student Name <span style="color: red;">*</span></label>
+                <input type="text" id="student_name" name="student_name" placeholder="Enter student name" required>
+
+                <!-- Student Gender -->
+                <label for="student_gender">Student Gender <span style="color: red;">*</span></label>
+                <select id="student_gender" name="student_gender" required>
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+
+                <!-- Student Personal Email -->
+                <label for="student_email">Student Personal Email <span style="color: red;">*</span></label>
+                <input type="email" id="student_email" name="student_email" placeholder="example@gmail.com" required>
+                <small id="email_feedback" class="form-text"></small><br>
+
+                <!-- Student Department -->
+                <label for="student_department">Student Department <span style="color: red;">*</span></label>
+                <input type="text" id="student_department" name="student_department" placeholder="Enter department (e.g., ECE, IT, CSE)" required oninput="this.value = this.value.toUpperCase();">
+
+                <!-- Student CGPA -->
+                <label for="student_cgpa">Student CGPA <span style="color: red;">*</span></label>
+                <input type="number" id="student_cgpa" name="student_cgpa" placeholder="Enter CGPA" step="0.1" min="6.5" max="8.5" required>
+                <small class="form-text" style="color: #555;">Note: Only CGPA between 6.5 to 8.5 will be considered.</small><br>
+
+                <!-- Student Native Location -->
+                <label for="student_native_location">Student Native Location <span style="color: red;">*</span></label>
+                <textarea id="student_native_location" name="student_native_location" placeholder="Enter native location (ie. Guntur, Hyderabad etc...)" rows="4" required></textarea>
+
+                <!-- Student Contact Number -->
+                <label for="student_contact">Student Contact Number <span style="color: red;">*</span></label>
+                <div class="input-group">
+                    <span class="input-group-text">+91</span>
+                    <input type="text" id="student_contact" name="student_contact" placeholder="Enter contact number" required maxlength="13">
+                </div>
+                <small id="contact_feedback" class="form-text"></small><br>
+
+                <!-- Student Father Occupation -->
+                <label for="father_occupation">Student Father Occupation</label>
+                <input type="text" id="father_occupation" name="father_occupation" placeholder="Enter father occupation (optional)">
+
+                <!-- Note to re-verify student details -->
+                <p style="color: red;">NOTE: <span style="color: #000000">Please re-verify student details before adding the student.</span></p>
+
+                <!-- Submit Button -->
+                <button type="submit" class="addStudentSubmit">Submit</button>
+            </form>
         @endif
-
-        <form class="inputs" action="{{ route('addStudent') }}" method="POST">
-            @csrf
-
-            <!-- Student College Name -->
-            <label for="student_college_name">Student College Name <span style="color: red;">*</span></label>
-            <input type="text" id="student_college_name" name="student_college_name" placeholder="Enter college name" required>
-
-            <!-- Student Name -->
-            <label for="student_name">Student Name <span style="color: red;">*</span></label>
-            <input type="text" id="student_name" name="student_name" placeholder="Enter student name" required>
-
-           <!-- Student Gender -->
-            <label for="student_gender">Student Gender <span style="color: red;">*</span></label>
-            <select id="student_gender" name="student_gender" required>
-                <option value="">Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-            </select>
-
-
-            <!-- Student Personal Email -->
-            <label for="student_email">Student Personal Email <span style="color: red;">*</span></label>
-            <input type="email" id="student_email" name="student_email" placeholder="example@gmail.com" required>
-            <small id="email_feedback" class="form-text"></small><br>
-
-            <!-- Student Department -->
-            <label for="student_department">Student Department <span style="color: red;">*</span></label>
-            <input type="text" id="student_department" name="student_department" placeholder="Enter department (e.g., ECE, IT, CSE)" required oninput="this.value = this.value.toUpperCase();">
-
-
-            <!-- Student CGPA -->
-            <label for="student_cgpa">Student CGPA <span style="color: red;">*</span></label>
-            <input type="number" id="student_cgpa" name="student_cgpa" placeholder="Enter CGPA" step="0.1" min="6.5" max="8.5" required>
-            <small class="form-text" style="color: #555;">Note: Only CGPA between 6.5 to 8.5 will be considered.</small><br>
-
-
-
-            <!-- Student Native Location -->
-            <label for="student_native_location">Student Native Location <span style="color: red;">*</span></label>
-            <textarea id="student_native_location" name="student_native_location" placeholder="Enter native location (ie. Guntur,Hyderabad etc...)" rows="4" required></textarea>
-
-            <!-- Student Contact Number -->
-            <label for="student_contact">Student Contact Number <span style="color: red;">*</span></label>
-            <div class="input-group">
-                <span class="input-group-text">+91</span>
-                <input type="text" id="student_contact" name="student_contact" placeholder="Enter contact number" required maxlength="13">
-            </div>
-            <small id="contact_feedback" class="form-text"></small><br>
-
-            <!-- Student Father Occupation -->
-            <label for="father_occupation">Student Father Occupation</label>
-            <input type="text" id="father_occupation" name="father_occupation" placeholder="Enter father occupation (optional)">
-
-            <!-- Note to re-verify student details -->
-            <p style="color: red;">NOTE: <span style="color: #000000">Please re-verify student details before adding the student.</span></p>
-
-            <!-- Submit Button -->
-            <button type="submit" class="addStudentSubmit">Submit</button>
-        </form>
     </div>
+
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
