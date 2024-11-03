@@ -32,4 +32,10 @@ class SchoolController extends Controller
 
         return back()->with('success', 'Your details have been successfully added! We Connect with you very Shortly.');
     }
+
+    public function studentDetails()
+    {
+        $studentDetails = School::all();
+        return view('studentDetails', compact('studentDetails'));
+    }
 }

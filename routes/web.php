@@ -23,7 +23,7 @@ Route::get('/school/addStudent', function () {
 })->name('school.addStudent');
 Route::post('/check_email', [SchoolController::class, 'checkEmail'])->name('check.email');
 Route::post('/addStudent', [SchoolController::class, 'addStudent'])->name('addStudent');
-
+Route::get('/studentDetails', [SchoolController::class, 'studentDetails'])->name('studentDetails');
 
 
 // Product Routing
