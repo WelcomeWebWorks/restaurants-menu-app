@@ -84,6 +84,7 @@
                             </div>
                             <p><span class="highlight">NOTE 1:</span> This is serious training for students <b>who genuinely seek jobs</b> and <b>come from financially disadvantaged backgrounds</b>. If you're planning to go abroad or are involved in a family business, please reconsider and allow others to take this opportunity. We are only accepting <b><span style="color: red">30</span> dedicated students</b>.</p>
 							<p><span class="highlight">NOTE 2:</span>Only for TELUGU STUDENTS.<br>Currently, we are only accepting students who speak Telugu.</p>
+							<p><span class="highlight">NOTE 3:</span> Only for <b>3rd</b> and <b>4th-year</b> students.<br> Offering free for 5 Sessions.</p>
                         </div>
 
                         <div class="head-btn wow fadeInUp">
