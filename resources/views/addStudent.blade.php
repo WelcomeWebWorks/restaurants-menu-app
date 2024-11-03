@@ -205,7 +205,7 @@
 
                 <!-- Student Department -->
                 <label for="student_department">Student Department & Year <span style="color: red;">*</span></label>
-                <input type="text" id="student_department" name="student_department" placeholder="Enter department $ Year (e.g., ECE 3Year , IT 4Year, CSE 3Year)" required oninput="this.value = this.value.toUpperCase();">
+                <input type="text" id="student_department" name="student_department" placeholder="Department & Year (e.g. ECE 3Year , IT 4Year, CSE 3Year)" required oninput="this.value = this.value.toUpperCase();">
 
                 <!-- Student CGPA -->
                 <label for="student_cgpa">Student CGPA <span style="color: red;">*</span></label>
