@@ -14,6 +14,18 @@ class SchoolController extends Controller
         return response()->json(['exists' => $exists]);
     }
 
+    public function deleteStudent($id)
+    {
+    $student = School::find($id);
+
+    if ($student) {
+        $student->delete();
+        return response()->json(['success' => true]);
+    }
+
+    return response()->json(['success' => false]);
+    }
+
     // Function to save the student details
     public function addStudent(Request $request)
     {
@@ -38,4 +50,6 @@ class SchoolController extends Controller
         $studentDetails = School::all();
         return view('studentDetails', compact('studentDetails'));
     }
+
+    
 }

@@ -24,6 +24,8 @@ Route::get('/school/addStudent', function () {
 Route::post('/check_email', [SchoolController::class, 'checkEmail'])->name('check.email');
 Route::post('/addStudent', [SchoolController::class, 'addStudent'])->name('addStudent');
 Route::get('/studentDetails', [SchoolController::class, 'studentDetails'])->name('studentDetails');
+Route::delete('/deleteStudent/{id}', [SchoolController::class, 'deleteStudent'])->name('deleteStudent');
+
 
 
 // Product Routing

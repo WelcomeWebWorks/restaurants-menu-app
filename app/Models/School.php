@@ -11,6 +11,7 @@ class School extends Model
 
     // Optional: Specify table if not the plural of model name
     protected $table = 'www_add_school_students';
+    protected $primaryKey = 'student_id';
 
     // Optional: Define fillable fields for mass assignment
     protected $fillable = ['student_college_name', 'student_name', 'student_gender', 'student_personal_email', 'student_department', 'student_cgpa', 'student_contact_number'];

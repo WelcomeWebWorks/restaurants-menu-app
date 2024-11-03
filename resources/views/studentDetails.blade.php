@@ -12,6 +12,9 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
+    <!-- Toastr CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
     <!-- Google Font: Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;900&display=swap" rel="stylesheet">
 
@@ -178,7 +181,7 @@
                 </thead>
                 <tbody>
                     @foreach($studentDetails as $studentDetail)
-                    <tr>
+                    <tr id="student-row-{{ $studentDetail->student_id }}">
                         <td>{{ $studentDetail->student_id }}</td>
                         <td>{{ $studentDetail->student_college_name }}</td>
                         <td>{{ $studentDetail->student_name }}</td>
@@ -190,8 +193,11 @@
                         <td>{{ $studentDetail->student_contact_number }}</td>
                         <td>{{ $studentDetail->student_father_occupation }}</td>
                         <td class="text-center">
-                            <a href="javascript:void(0);" class="text-success edit-client" data-id="{{ $studentDetail->student_id }}" title="Edit">
+                            <a href="javascript:void(0);" class="text-success edit-student" data-id="{{ $studentDetail->student_id }}" title="Edit">
                                 <i class="fas fa-edit" style="font-size: 20px;"></i>
+                            </a>
+                            <a href="javascript:void(0);" class="text-danger delete-student" data-id="{{ $studentDetail->student_id }}" title="Delete">
+                                <i class="fas fa-trash" style="font-size: 20px;"></i>
                             </a>
                         </td>
                     </tr>
@@ -285,6 +291,12 @@
     <!-- DataTables Responsive Bootstrap JS -->
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
 
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
     <!-- Initialize DataTable -->
     <script>
         $(document).ready(function() {
@@ -300,5 +312,50 @@
                 // columns: [ ... ]
             });
         });
+        $(document).ready(function() {
+        $('.delete-student').on('click', function() {
+            var studentId = $(this).data('id');
+            
+             // SweetAlert confirmation popup
+             Swal.fire({
+                     title: 'Are you sure?',
+                     text: 'You won\'t be able to revert this!',
+                     icon: 'warning',
+                     showCancelButton: true,
+                     confirmButtonColor: '#3085d6',
+                     cancelButtonColor: '#d33',
+                     confirmButtonText: 'Yes, delete it!',
+                     cancelButtonText: 'Cancel'
+                 }).then((result) => {
+                     if (result.isConfirmed) {
+                         // Perform AJAX request to delete the record
+                         $.ajax({
+                             url: '/deleteStudent/' + studentId, // Replace with your delete route
+                             method: 'DELETE',
+                             data: {
+                                 _token: '{{ csrf_token() }}' // Include CSRF token
+                             },
+                             success: function(response) {
+                                 // Show success toast notification after successful deletion
+                                 toastr.success('Student deleted successfully!');
+ 
+                                 // Remove the corresponding table row dynamically
+                                 $('#student-row-' + studentId).fadeOut(500, function() {
+                                     $(this).remove();
+                                 });
+                             },
+                             error: function(xhr, status, error) {
+                                 // Handle error and show error toast notification
+                                 toastr.error('Failed to delete the Student. Please try again.');
+                             }
+                         });
+                     } else if (result.dismiss === Swal.DismissReason.cancel) {
+                         // Handle if the user cancels
+                         toastr.info('Action canceled.');
+                     }
+                 });
+                });
+            });
     </script>
+ 
 @endsection
