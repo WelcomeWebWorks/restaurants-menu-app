@@ -6,16 +6,30 @@ use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AdminRegistation;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SchoolController;
 
 // Company Portfolio
 Route::get('/', function () {
     return view('index');
 })->name('index');
 
+// School Portfolio
+Route::get('/school', function () {
+    return view('schoolIndex');
+})->name('schoolIndex');
+
+Route::get('/school/addStudent', function () {
+    return view('addStudent');
+})->name('school.addStudent');
+Route::post('/check_email', [SchoolController::class, 'checkEmail'])->name('check.email');
+Route::post('/addStudent', [SchoolController::class, 'addStudent'])->name('addStudent');
+
+
+
 // Product Routing
 Route::domain('{subdomain}.welcomewebworks.com')->group(function () {
-    Route::get('/menu', [ProductController::class, 'checkSubdomain'])->name('subdomain.menu');
-});
+     Route::get('/menu', [ProductController::class, 'checkSubdomain'])->name('subdomain.menu');
+ });
 
 Route::get('/api/menu-items', [ProductController::class, 'getMenuItems']);
 
