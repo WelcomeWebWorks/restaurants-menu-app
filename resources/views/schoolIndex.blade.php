@@ -58,7 +58,7 @@
 
     <div id="top"></div>
 
-    <div class="fullscreen landing parallax" style="background-image:url('images/bg2.jpg');" data-img-width="2000" data-img-height="1325" data-diff="100">
+    <div style="background-color: black">
         <div class="overlay">
             <div class="container">
                 <div class="row">
@@ -106,9 +106,9 @@
                         <div class="col-sm-12 wow fadeInUp text-center">
                             <h2 style="font-size: 24px;"><span class="highlight">Contact</span> US</h2>
                             <ul class="ul-address" style="font-size: 18px; list-style: none; padding-left: 0;">
-                                <li><i class="fa fa-phone" style="margin-right: 10px;"></i> +91 9676781687</li>
-                                <li><i class="fa fa-envelope" style="margin-right: 10px;"></i><a href="mailto:theschoolofwelcomewebworks@gmail.com"> theschoolofwelcomewebworks@gmail.com</a></li>
-                                <li><i class="fa fa-eye" style="margin-right: 10px;"></i><a href="http://www.welcomewebworks.com"> www.welcomewebworks.com</a></li>
+                                <li><i class="fa fa-phone" style="margin-right: 10px;"></i> <span class="highlight">+91</span> 8309717034</li>
+                                <li><a href="mailto:theschoolofwelcomewebworks@gmail.com"> theschoolofwelcomewebworks@gmail.com</a></li>
+                                <li><i class="fa fa-eye" style="margin-right: 10px;"></i><a href="http://www.welcomewebworks.com"> www.<span style="color: white">welcomewebworks</span>.com</a></li>
                             </ul>
                         </div>
                     </div>
