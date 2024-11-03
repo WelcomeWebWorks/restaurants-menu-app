@@ -73,7 +73,7 @@
                             <span style="color:gold"><b>BUILDING YOUR FUTURE</b></span>
                         </div><br>
 
-                        <div class="landing-text wow fadeInlef">
+                        <div class="landing-text wow fadeInlef" style="color: white">
                             <p><span style="font-size: 25px;">TEACHING</span> ECE, IT, and CSE students to understand <br><b>how the IT industry operates</b> and develop full-stack skills.</p>
                             <div class="tree">
                                 <div class="branch">
